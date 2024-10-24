@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib.gridspec as gridspec
 
 data = pd.read_csv(r'D:/Documentos/Cursos/Platzi/Python_ciencia_datos/Pandas/Online_Retail.csv',encoding='latin')
 print(data.info())
@@ -70,7 +71,7 @@ data_cleaned.groupby(['Year', 'Month'])['TotalAmount'].sum().plot(kind='bar')
 plt.title('Distribución de ventas por mes y año')
 plt.xlabel('Año, Mes')
 plt.ylabel('Ventas totales')
-plt.show()
+#plt.show()
 
 #Gráfica top 10 más vendidos
 top_products = data_cleaned.groupby('StockCode')['Quantity'].sum().sort_values(ascending=False).head(10)
@@ -83,5 +84,29 @@ plt.title('Top de productos')
 plt.xlabel('Cantidad vendida')
 plt.ylabel('Producto')
 plt.gca().invert_yaxis()
+
+#plt.show()
+
+gs = gridspec.GridSpec(1,2)
+fig = plt.figure(figsize= (12,8))
+
+#-----------------------------------------------
+#Varias gráficas en un solo plot
+#Primer subplot grande, ocupa toda la primera fila
+ax1 = fig.add_subplot(gs[0,0])
+data_cleaned.groupby(['Year', 'Month'])['TotalAmount'].sum().plot(kind='bar', ax=ax1)
+ax1.set_title('Distribución de ventas por mes y año')
+ax1.set_xlabel('Año, Mes')
+ax1.set_ylabel('Ventas totales')
+
+#Segundo subplot grande, ocupa toda la primera fila
+ax2 = fig.add_subplot(gs[0,1])
+ax2.barh(top_products['Description'], top_products['Quantity'])
+ax2.set_title('Top de productos')
+ax2.set_xlabel('Cantidad vendida')
+ax2.set_ylabel('Producto')
+ax2.invert_yaxis()
+
+plt.tight_layout()
 
 plt.show()
